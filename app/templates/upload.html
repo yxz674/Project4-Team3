@@ -1,0 +1,58 @@
+{% extends "index.html" %}
+
+{% block title %}Upload file{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <main>
+                <h1> File Upload Format Requirements</h1>
+                <p>
+                <ul>
+                    <li>
+                        paragraphs.......................................................................................................
+                    </li>
+                    <li>
+                        paragraphs.......................................................................................................
+                    </li>
+                    <li>
+                        paragraphs.......................................................................................................
+                    </li>
+                    <li>
+                        paragraphs.......................................................................................................
+                    </li>
+                    <li>
+                        paragraphs.......................................................................................................
+                    </li>
+                </ul>
+                </p>
+                <hr>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>please follow file format to upload file</label>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="inputGroupFile02" name ="file">
+                            <label class="input-group-text" for="inputGroupFile02">Browse</label>
+                          </div>
+                    </div>
+                    <br><br>
+                    <button type="submit" class="btn btn-primary">Upload File</button>
+                </form>
+            </main>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    function filesize(elem){
+
+        document.cookie = `filesize=${elem.files[0].size}`;
+    }
+</script>
+
+
+{% endblock %}
