@@ -2,29 +2,36 @@
 import os
 from flask import Flask, render_template,request,flash,redirect,url_for
 from werkzeug.utils import secure_filename
+import pickle
+import numpy as np
+
+#Loading model.py
+model=pickle.load(open('model.pkl','rb'))
 
 app = Flask(__name__)
-# check documentation : https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
+#===========================================================================================#
+# This is for upload.html page----check documentation : https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
 app.secret_key =b'secret'
 
-# print path: git bash type cd app/static/files/uploads then type pwd, FILES_UPLOADS is the folder name under app-static
-FILES_UPLOADS = "/c/Users/Cecilia/Project4-Team3/app/static/files/uploads"  
+# print path: git bash type cd Project4-Team3/app/static/uploads then type pwd, FILES_UPLOADS is the folder name under app-static
+FILES_UPLOADS = '/c/Users/Cecilia/Project4-Team3/app/static/uploads'
+# FILES_UPLOADS = "/c/Users/Cecilia/Project4-Team3/app/static/files/uploads"  
 ALLOWED_EXTENSION = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif' 'csv'}
 
 app.config['FILES_UPLOADS'] = FILES_UPLOADS
 app.config['ALLOWED_EXTENSION'] = ALLOWED_EXTENSION
-app.config["MAX_FILE-FILESIZE"] = 0.5 * 1024 * 1024
+# app.config["MAX_FILE-FILESIZE"] = 0.5 * 1024 * 1024
 
 def allowed_files(filename: str) ->bool:
     print(filename)
     print('.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION)
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
 
-def allowed_files_filesize(filesize):
-    if int(filesize) <= app.config["MAX_FILE-FILESIZE"]:
-        return True
-    else:
-        return False
+# def allowed_files_filesize(filesize):
+#     if int(filesize) <= app.config["MAX_FILE-FILESIZE"]:
+#         return True
+#     else:
+#         return False
 
 #===========================================================================================#
 # set individual html route
@@ -44,19 +51,15 @@ def index_user():
 def index_data():
     return render_template("data.html")
 #==============================================================================================#
-# check documentation : https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
+# This is for upload.html page----check documentation : https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
 @app.route('/upload', methods=['GET', 'POST'])
 def index_upload():
     if request.method == 'POST':
-        if request.files:
-            if allowed_files_filesize(request.cookies.get("filesize")):
-                print("Fule exceeded maximum size")
-                return redirect(request.url)
         # check if the post request has the file part
-        if 'file' not in request.files:
+        if 'image' not in request.files:
             flash('No file part')
             return redirect(request.url)
-        file = request.files['file']
+        file = request.files['image']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
@@ -66,13 +69,31 @@ def index_upload():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['FILES_UPLOADS'], filename))
             print('File uploaded successfully')
-            return redirect(url_for('download', name=filename))
-    return render_template("upload.html")
+            return render_template("upload.html",fileupload=True,file_name=filename)
+            # return redirect(url_for('download', name=filename))
+        
+    return render_template("upload.html",fileupload=False,file_name="freeai.png")
 
 
-@app.route('/download', methods=['Get'])
-def download():
-    return 'Download Page'
+# @app.route('/download', methods=['Get'])
+# def download():
+#     return 'Download Page'
+#==============================================================================================#
+@app.route('/predict', methods=['POST'])
+def index_predict():
+    data1 = request.form['employee_satifaction']
+    data2 = request.form['employees_last_evaluation']
+    data3 = request.form['number_of_employee_projects']
+    data4 = request.form['average_hours_per_month']
+    data5 = request.form['years_of_service']
+    data6 = request.form['empoyee_has_had_accident']
+    data7 = request.form['empoyeed_salary_range']
+    arr = np.array([[data1, data2, data3, data4, data5, data6, data7]])
+    pred = model.predict(arr)
+    return render_template('user.html', prediction_text='Employee will {}'.format(pred))
+
+################SQL Database part##################################
+
 
 #run
 if __name__ =='__main__':
