@@ -1,8 +1,44 @@
 {% extends "index.html" %}
 
+{% block title %}User Input{% endblock %}
+
 {% block content %}
-<main>
-   <h1> This is the user input page!</h1>
-</main>
+
+<div class="login">
+   
+      <h1>Predict Turnover Analysis</h1>
+
+      <!-- Main Input For Receiving Query to our ML -->
+      <form action="/predict" method="POST">
+         <b>Employee Satifaction: <input type="text" name="employee_satifaction" placeholder="enter 1"
+               required="required" /><br><br>
+            Employees Last Evaluation: <input type="text" name="employees_last_evaluation"
+               placeholder="enter 2" required="required" /><br><br>
+            Number of Employee Projects: <input type="text" name="number_of_employee_projects"
+               placeholder="enter 3" required="required" /><br><br>
+            Average Hours Per Month: <input type="text" name="average_hours_per_month"
+               placeholder="enter 4" required="required" /><br><br>
+            Years of Service: <input type="text" name="years_of_service" placeholder="enter 5"
+               required="required" /><br><br>
+            Employee has had Accident: <input type="text" name="empoyee_has_had_accident"
+               placeholder="enter 6" required="required" /><br><br>
+            Employeed Salary Range: <input type="text" name="empoyeed_salary_range"
+               placeholder="enter 7" required="required" /><br><br></b>
+         <button type="submit" class="btn btn-primary btn-block btn-large" value="predict"> Predict</button>
+      </form>
+      
+      <br>
+      <br>
+      <center>
+      <!-- {{ prediction_text }} -->
+        {% if data == 0%}
+         <p>Employee will stay</p>
+         {%else %}
+         <p>Employee will leave</p>
+        {%endif%}
+      </center>
+
+</div>
+
 
 {% endblock content %}
