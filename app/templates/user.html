@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+
+{% block title %}User Input{% endblock %}
+
+{% block content %}
+
+<div class="login">
+      <br>
+      <br>
+      <h1>Predict Turnover Analysis</h1>
+      <br>
+      <!-- Main Input For Receiving Query to our ML -->
+      <form action="/predict" method="POST">
+         <b>Employee Satifaction <span style="color:blue">(percentage 0.1 to 1.0)</span>: <input type="text" name="employee_satifaction" placeholder="enter 1"
+               required="required" /><br><br>
+            Employees Last Evaluation <span style="color:blue">(3-6months = .56 ; 6-9months = .72; 9-12months = .87; 12+months = 1)</span>: <input type="text" name="employees_last_evaluation"
+               placeholder="enter 2" required="required" /><br><br>
+            Number of Employee Projects <span style="color:blue">(integer 2 to 7)</span>: <input type="text" name="number_of_employee_projects"
+               placeholder="enter 3" required="required" /><br><br>
+            Average Hours Per Month <span style="color:blue">(integer 96 to 310)</span>: <input type="text" name="average_hours_per_month"
+               placeholder="enter 4" required="required" /><br><br>
+            Years of Service <span style="color:blue">(integer 2 to 10)</span>: <input type="text" name="years_of_service" placeholder="enter 5"
+               required="required" /><br><br>
+            Employee has had Accident <span style="color:blue">(integer, 1 = Yes; 0 = No)</span>: <input type="text" name="empoyee_has_had_accident"
+               placeholder="enter 6" required="required" /><br><br>
+            Employeed Salary Range <span style="color:blue">(integer,1 = low; 2 = medium; 0 = high)</span>: <input type="text" name="empoyeed_salary_range"
+               placeholder="enter 7" required="required" /><br><br></b>
+         <button type="submit" class="btn btn-primary btn-block btn-large" value="predict"> Predict</button>
+      </form>
+      
+      <br>
+      <br>
+      <center>
+      <!-- check out this youtube video https://www.youtube.com/watch?v=JteK3xvpg3Q -->
+      {% if prediction_text == 1 %}
+         <p>Employee will leave</p>
+      {% elif prediction_text == 0 %}
+         <p>Employee will stay</p>
+      {%endif%}
+      </center>
+
+</div>
+
+
+{% endblock content %}
